@@ -70,6 +70,7 @@ def 入力待ち():
                 break
             except Exception as e:
                 print('Yahoo! JAPAN Web APIからエラーが返ってきました。もう一度入力して下さい。')
+                print('')
             
     while True:
         入力ファイル = input("ふりがなを付けるjsonファイルのパスを入力して下さい : ")
@@ -82,7 +83,13 @@ def 入力待ち():
             print('')
         else:
             入力ファイル = str(pathlib.Path(入力ファイル).resolve())
-            break
+            try:
+                件数 = len(jsonファイル読込(入力ファイル))
+                break
+            except Exception as e:
+                print('ファイルの読み込みに失敗しました。もう一度入力して下さい。')
+                print('')
+
 
     while True:
         出力ファイル = input("出力するjsonファイルのパスを入力して下さい : ")
@@ -107,10 +114,12 @@ def 入力待ち():
             7: "中学生以上向け。小学校で習う漢字にはふりがなを付けません。",
             8: "一般向け。常用漢字にはふりがなを付けません。"
             }
+    
     print('0～8で学年を決めます')
     for キー in 学年説明リスト:
         print('　　'+ str(キー) +'：' + 学年説明リスト[キー])
     print('')
+
     while True:
         学年 = input("0～8で学年をしてください : ")
         print('')
@@ -119,21 +128,21 @@ def 入力待ち():
             print('')
         elif not 学年 in list(map(str,学年説明リスト.keys())):
             print('0～8以外です。もう一度入力して下さい。')
-            print(list(map(str,学年説明リスト.keys())))
+            print('')
         else:
             学年 = int(学年)
             break
-
+    
     print('')
     Unicodeエスケープ = input("Unicodeエスケープ[Y:する(デフォルト) / N:しない] : ")
     if Unicodeエスケープ in ['N','n']:
-        Unicodeエスケープ = 'NO'
+        Unicodeエスケープ = "NO"
     else:
-        Unicodeエスケープ = 'YES'
+        Unicodeエスケープ = "YES"
 
     # 入力値 処理時間の確認
-    件数 = len(jsonファイル読込(入力ファイル))
     時間 = round((件数 * 0.25) / 60)
+    時間 = 1 if 時間 < 1 else 時間
 
     print('------------------------------------------------------------------------------------')
     print('【引数の確認】')
